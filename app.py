@@ -3,25 +3,21 @@ import vizro.models as vm
 import vizro.plotly.express as px
 
 home_page = vm.Page(
-    title="Homepage",
+    title="Index",
     components=[
         vm.Card(
             text="""
-            ![](assets/images/icons/content/collections.svg#icon-top)
+            ### Global Macro
 
-            ### First Page
-
-            Exemplary first dashboard page.
+            Global Macro
             """,
-            href="/first-page",
+            href="/global-macro",
         ),
         vm.Card(
             text="""
-            ![](assets/images/icons/content/features.svg#icon-top)
+            ### US Market
 
-            ### Second Page
-
-            Exemplary second dashboard page.
+            Indicies
             """,
             href="/second-page",
         ),
@@ -33,13 +29,13 @@ gapminder_data = (
         df.groupby(by=["continent", "year"]).
             agg({"lifeExp": "mean", "pop": "sum", "gdpPercap": "mean"}).reset_index()
     )
-first_page = vm.Page(
-    title="First Page",
+global_macro = vm.Page(
+    title="Global Macro",
     layout=vm.Layout(grid=[[0, 0], [1, 2], [1, 2], [1, 2]]),
     components=[
         vm.Card(
             text="""
-                # First dashboard page
+                # Global Macro
                 This pages shows the inclusion of markdown text in a page and how components
                 can be structured using Layout.
             """,
@@ -62,8 +58,8 @@ first_page = vm.Page(
 )
 
 iris_data = px.data.iris()
-second_page = vm.Page(
-    title="Second Page",
+us_markets = vm.Page(
+    title="US Markets",
     components=[
         vm.Graph(
             id="scatter_iris",
@@ -96,5 +92,5 @@ second_page = vm.Page(
     ],
 )
 
-dashboard = vm.Dashboard(pages=[home_page, first_page, second_page])
+dashboard = vm.Dashboard(pages=[home_page, global_macro, us_markets])
 Vizro().build(dashboard).run()
