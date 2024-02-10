@@ -1,6 +1,18 @@
 from vizro import Vizro
 import vizro.models as vm
 import vizro.plotly.express as px
+import pandas as pd
+from openbb import obb
+from dotenv import load_dotenv
+import os
+
+patK = os.getenv('PAT')
+obb.account.login(pat=patK)
+
+spy_price = obb.equity.price.historical(
+    "SPY", start_date="2018-01-01", provider="fmp", interval="1d"
+).to_df()
+
 
 home_page = vm.Page(
     title="Index",
@@ -57,38 +69,16 @@ global_macro = vm.Page(
     ],
 )
 
-iris_data = px.data.iris()
 us_markets = vm.Page(
     title="US Markets",
     components=[
         vm.Graph(
             id="scatter_iris",
-            figure=px.scatter(iris_data, x="sepal_width", y="sepal_length", color="species",
-                color_discrete_map={"setosa": "#00b4ff", "versicolor": "#ff9222"},
-                labels={"sepal_width": "Sepal Width", "sepal_length": "Sepal Length",
-                        "species": "Species"},
-            ),
-        ),
-        vm.Graph(
-            id="hist_iris",
-            figure=px.histogram(iris_data, x="sepal_width", color="species",
-                color_discrete_map={"setosa": "#00b4ff", "versicolor": "#ff9222"},
-                labels={"sepal_width": "Sepal Width", "count": "Count",
-                        "species": "Species"},
+            figure=px.line(spy_price, x=spy_price.index, y="close",
             ),
         ),
     ],
     controls=[
-        vm.Parameter(
-            targets=["scatter_iris.color_discrete_map.virginica",
-                        "hist_iris.color_discrete_map.virginica"],
-            selector=vm.Dropdown(
-                options=["#ff5267", "#3949ab"], multi=False, value="#3949ab", title="Color Virginica"),
-            ),
-        vm.Parameter(
-            targets=["scatter_iris.opacity", "hist_iris.opacity"],
-            selector=vm.Slider(min=0, max=1, value=0.8, title="Opacity"),
-        ),
     ],
 )
 
